@@ -89,7 +89,8 @@ const Header = ({ onNavigate }) => {
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/497bdb00407db5e6221fd8e93487be13a65bc3e4"
             alt="Profile"
-            className="w-10 h-10 rounded-full"
+            className="w-10 h-10 rounded-full cursor-pointer"
+            onClick={() => onNavigate && onNavigate('user')}
           />
         </div>
       </div>

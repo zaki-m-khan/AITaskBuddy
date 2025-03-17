@@ -9,7 +9,7 @@ import UpcomingCheckins from "./UpcomingCheckins";
 const JobCoachDashboard = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header />
+      <Header onNavigate={onNavigate} />
       <div className="flex">
         <Sidebar onNavigate={onNavigate} />
         <main className="flex-1 p-6">

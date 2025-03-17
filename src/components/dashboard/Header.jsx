@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = () => {
+const Header = ({ onNavigate }) => {
   return (
     <header className="bg-white shadow-sm p-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -11,7 +11,10 @@ const Header = () => {
               <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
             </svg>
           </button>
-          <div className="h-8 w-8 rounded-full bg-indigo-200 flex items-center justify-center">
+          <div 
+            className="h-8 w-8 rounded-full bg-indigo-200 flex items-center justify-center cursor-pointer"
+            onClick={() => onNavigate && onNavigate('user')}
+          >
             <span className="text-sm font-medium text-indigo-600">JD</span>
           </div>
         </div>
