@@ -5,28 +5,43 @@ import SignUpForm from "./SignUpForm";
 import FeatureCard from "./FeatureCard";
 import Footer from "./Footer";
 
-function AITaskBuddyLandingPage({ onNavigate, onSignup }) {
+function AITaskBuddyLandingPage({ onEmailSignup, onGoogleSignup, onNavigate }) {
   return (
     <div className="min-h-screen">
       <Header onNavigate={onNavigate} />
-      <main className="px-20 py-0 mx-auto my-0 max-w-[1440px] max-md:px-10 max-md:py-0">
-        <section className="flex gap-12 px-0 py-12 max-md:flex-col">
-          <div className="flex-1">
-            <h1 className="mb-6 text-5xl font-bold leading-tight text-indigo-900 max-sm:text-3xl">
-              Start Your Journey with AI Task Buddy
+      <main className="flex flex-col gap-16 px-20 py-12 mx-auto my-0 max-w-[1440px] max-md:px-10 max-md:py-12 max-sm:px-5">
+        <section className="flex gap-12 justify-between items-center max-md:flex-col">
+          <div className="flex flex-col gap-6 max-w-[584px]">
+            <h1 className="text-5xl font-bold text-indigo-900 max-md:text-4xl max-sm:text-3xl">
+              Join AI Task Buddy Today
             </h1>
-            <p className="mb-12 text-xl text-gray-700 max-sm:text-base">
-              Create your account and discover a smarter way to manage tasks
-              with personalized AI assistance.
+            <p className="text-xl text-gray-600 max-md:text-lg">
+              Create an account to start using AI-powered tools for job coaching and task management.
             </p>
-            <div className="flex gap-4 p-6 bg-white rounded-xl shadow-[0_4px_6px_rgba(0,0,0,0.1),0_10px_15px_rgba(0,0,0,0.1)] max-md:flex-wrap max-md:justify-center">
-              <FeatureCard icon={<AudioModeIcon />} title="Audio Mode" />
-              <FeatureCard icon={<VisualModeIcon />} title="Visual Mode" />
-              <FeatureCard icon={<TextModeIcon />} title="Text Mode" />
-            </div>
           </div>
-          <div className="flex-1">
-            <SignUpForm onSignup={onSignup} onNavigateToLogin={() => onNavigate('login')} />
+          <SignUpForm 
+            onEmailSignup={onEmailSignup} 
+            onGoogleSignup={onGoogleSignup} 
+            onNavigateToLogin={() => onNavigate('login')} 
+          />
+        </section>
+        <section className="flex flex-col gap-12">
+          <h2 className="text-3xl font-bold text-center text-indigo-900">
+            Why Choose AI Task Buddy?
+          </h2>
+          <div className="grid grid-cols-3 gap-6 max-md:grid-cols-2 max-sm:grid-cols-1">
+            <FeatureCard
+              title="Personalized Support"
+              description="Get AI-powered assistance tailored to your specific job needs and challenges."
+            />
+            <FeatureCard
+              title="Progress Tracking"
+              description="Monitor employee progress with detailed analytics and insights."
+            />
+            <FeatureCard
+              title="Accessible Interface"
+              description="User-friendly design that works for everyone, regardless of ability."
+            />
           </div>
         </section>
       </main>

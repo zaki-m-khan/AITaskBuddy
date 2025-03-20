@@ -1,6 +1,8 @@
 import React from "react";
 
-function WelcomeSection() {
+function WelcomeSection({ userInfo }) {
+  const userName = userInfo?.name || "there";
+  
   return (
     <section className="flex gap-4 items-center p-6 bg-white rounded-xl shadow-sm">
       <div className="flex flex-1 gap-4 items-center">
@@ -23,7 +25,7 @@ function WelcomeSection() {
           </svg>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-800">What would you like to do today?</h2>
+          <h2 className="text-xl font-bold text-gray-800">Welcome, {userName}!</h2>
           <p className="text-gray-600">I'll help you break it down into simple steps</p>
         </div>
       </div>

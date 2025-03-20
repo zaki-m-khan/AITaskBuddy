@@ -1,26 +1,41 @@
 import React from "react";
 
-const Header = ({ onNavigate }) => {
+function Header({ onLogout, userInfo }) {
   return (
-    <header className="bg-white shadow-sm p-4">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold text-indigo-600">AITaskBuddy</h1>
+    <header className="bg-white shadow">
+      <div className="flex justify-between items-center px-6 py-4">
+        <div className="flex items-center">
+          <h1 className="ml-3 text-xl font-semibold text-gray-900">AI Task Buddy</h1>
+        </div>
         <div className="flex items-center space-x-4">
-          <button className="p-2 rounded-full bg-gray-100">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-            </svg>
-          </button>
-          <div 
-            className="h-8 w-8 rounded-full bg-indigo-200 flex items-center justify-center cursor-pointer"
-            onClick={() => onNavigate && onNavigate('user')}
-          >
-            <span className="text-sm font-medium text-indigo-600">JD</span>
+          <div className="flex items-center">
+            {userInfo?.photoURL ? (
+              <img
+                src={userInfo.photoURL}
+                alt="Profile"
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <img
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo?.name || 'User')}&background=random`}
+                alt="Profile"
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <div className="ml-2">
+              <p className="text-sm font-medium text-gray-700">{userInfo?.name || 'User'}</p>
+              <button 
+                onClick={onLogout}
+                className="text-xs text-gray-500 hover:text-indigo-600"
+              >
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default Header; 

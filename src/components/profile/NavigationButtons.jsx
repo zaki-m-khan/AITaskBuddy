@@ -1,20 +1,24 @@
-export const NavigationButtons = ({ currentStep, onNext, onBack }) => {
+"use client";
+import React from "react";
+
+export function NavigationButtons({ currentStep, totalSteps = 5, onNext, onBack }) {
   return (
     <div className="flex justify-between mt-8">
       <button 
-        className="h-10 text-base rounded-lg cursor-pointer bg-neutral-200 border-none w-[85px]"
         onClick={onBack}
+        className={`px-6 py-2 rounded-md ${
+          currentStep === 1 ? 'bg-gray-200 text-gray-600 cursor-not-allowed' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+        }`}
         disabled={currentStep === 1}
-        style={{ opacity: currentStep === 1 ? 0.5 : 1 }}
       >
         Back
       </button>
       <button 
-        className="h-10 text-base text-white bg-indigo-600 rounded-lg cursor-pointer border-none w-[85px] hover:bg-indigo-700"
         onClick={onNext}
+        className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
       >
-        {currentStep === 4 ? "Finish" : "Next"}
+        {currentStep === totalSteps ? 'Finish' : 'Next'}
       </button>
     </div>
   );
-};
+}

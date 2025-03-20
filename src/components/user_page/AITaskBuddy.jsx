@@ -9,13 +9,13 @@ import AchievementCard from "./AchievementCard";
 import GrowthGarden from "./GrowthGarden";
 import HelpFooter from "./HelpFooter";
 
-function AITaskBuddy({ onNavigate }) {
+function AITaskBuddy({ onNavigate, onLogout, userInfo }) {
   return (
     <div className="flex flex-col bg-[linear-gradient(90deg,#EEF2FF_0%,#FFF_100%)] min-h-screen">
-      <Header onNavigate={onNavigate} />
+      <Header onNavigate={onNavigate} onLogout={onLogout} userInfo={userInfo} />
       <main className="flex flex-col gap-8 px-20 py-8 max-md:px-10 max-sm:px-5">
         <div className="flex flex-col gap-6">
-          <WelcomeSection />
+          <WelcomeSection userInfo={userInfo} />
           <InputOptions />
           <div className="flex gap-4 max-sm:flex-wrap">
             <div className="flex-1 flex flex-col">

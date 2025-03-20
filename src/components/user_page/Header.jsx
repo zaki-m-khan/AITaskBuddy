@@ -1,6 +1,6 @@
 import React from "react";
 
-function Header({ onNavigate }) {
+function Header({ onNavigate, onLogout, userInfo, userRole }) {
   return (
     <header className="flex justify-between items-center px-8 py-5 w-full bg-white shadow-sm">
       <div className="flex gap-3 items-center">
@@ -29,19 +29,32 @@ function Header({ onNavigate }) {
         <h1 className="text-2xl font-bold text-indigo-900">AI Task Buddy</h1>
       </div>
       <nav className="flex gap-6 items-center">
+        {userRole === "manager" && (
+          <button 
+            className="text-lg text-gray-600 hover:text-indigo-600"
+            onClick={() => onNavigate && onNavigate('dashboard')}
+          >
+            Dashboard
+          </button>
+        )}
         <button 
           className="text-lg text-gray-600 hover:text-indigo-600"
-          onClick={() => onNavigate && onNavigate('dashboard')}
+          onClick={() => onNavigate && onNavigate('tasks')}
         >
-          Dashboard
+          Tasks
         </button>
         <button className="text-lg text-gray-600">Settings</button>
         <button className="text-lg text-gray-600">Help</button>
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/93e6aced1891ff5067e23f6e2dccc5011dcbf0ed"
-          alt="Profile"
-          className="w-[40px] h-[40px] rounded-[9999px]"
-        />
+        <button 
+          onClick={onLogout}
+          className="flex items-center"
+        >
+          <img
+            src={userInfo?.photoURL || "https://cdn.builder.io/api/v1/image/assets/TEMP/93e6aced1891ff5067e23f6e2dccc5011dcbf0ed"}
+            alt="Profile"
+            className="w-[40px] h-[40px] rounded-[9999px]"
+          />
+        </button>
       </nav>
     </header>
   );

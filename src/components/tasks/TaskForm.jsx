@@ -1,9 +1,19 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import InputOption from "./InputOption";
 import QuickTemplateButton from "./QuickTemplateButton";
 
-const TaskForm = () => {
+export function TaskForm({ onAddTask, inputMethod }) {
+  const [taskText, setTaskText] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (taskText.trim()) {
+      onAddTask(taskText);
+      setTaskText("");
+    }
+  };
+
   const typeIcon = (
     <svg
       width="28"
@@ -71,35 +81,62 @@ const TaskForm = () => {
   );
 
   return (
-    <section className="p-8 bg-white rounded-xl shadow-[0_4px_6px_rgba(0,0,0,0.1),0_10px_15px_rgba(0,0,0,0.1)] max-sm:p-6">
-      <h2 className="mb-6 text-2xl font-bold text-indigo-900">Add New Task</h2>
-      <div className="flex gap-4 mb-8 max-md:flex-col">
-        <InputOption icon={typeIcon} label="Type" />
-        <InputOption icon={speakIcon} label="Speak" />
-        <InputOption icon={visualIcon} label="Visual" />
-      </div>
-      <div className="mb-8">
-        <textarea
-          placeholder="Describe your task..."
-          className="p-4 w-full h-32 text-base text-gray-400 rounded-lg border-2 border-indigo-100 border-solid resize-none"
-        />
-      </div>
-      <div className="mb-8">
-        <h3 className="mb-5 text-lg font-semibold text-gray-700">
-          Quick Templates
-        </h3>
-        <div className="flex gap-3 max-sm:flex-wrap">
-          <QuickTemplateButton label="Clean workspace" />
-          <QuickTemplateButton label="Organize files" />
-          <QuickTemplateButton label="Team meeting" />
-          <QuickTemplateButton label="Check emails" />
+    <form onSubmit={handleSubmit} className="w-full">
+      {inputMethod === 'text' && (
+        <div className="relative">
+          <input
+            type="text"
+            value={taskText}
+            onChange={(e) => setTaskText(e.target.value)}
+            placeholder="Describe your task..."
+            className="w-full p-4 pr-12 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            type="submit"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 hover:text-indigo-800"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
-      </div>
-      <button className="w-full h-14 text-base text-white bg-indigo-600 rounded-lg cursor-pointer border-[none]">
-        Create Task
-      </button>
-    </section>
-  );
-};
+      )}
 
-export default TaskForm;
+      {inputMethod === 'audio' && (
+        <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center">
+          <button
+            type="button"
+            className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4"
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C11.0111 2 10.0444 2.39933 9.31864 3.10961C8.59289 3.81989 8.17713 4.75633 8.17713 5.73333V11.6C8.17713 12.577 8.59289 13.5134 9.31864 14.2237C10.0444 14.934 11.0111 15.3333 12 15.3333C12.9889 15.3333 13.9556 14.934 14.6814 14.2237C15.4071 13.5134 15.8229 12.577 15.8229 11.6V5.73333C15.8229 4.75633 15.4071 3.81989 14.6814 3.10961C13.9556 2.39933 12.9889 2 12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M19 10.6667V11.6C19 13.7885 18.1045 15.8669 16.5104 17.4246C14.9163 18.9824 12.7893 19.8571 10.5714 19.8571" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 10.6667V11.6C5 13.7885 5.89543 15.8669 7.48959 17.4246C9.08374 18.9824 11.2107 19.8571 13.4286 19.8571" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 19.8571V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8.17713 22H15.8229" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <p className="text-gray-600">Tap to record</p>
+        </div>
+      )}
+
+      {inputMethod === 'visual' && (
+        <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center">
+          <button
+            type="button"
+            className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4"
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 8H15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3 6C3 5.20435 3.31607 4.44129 3.87868 3.87868C4.44129 3.31607 5.20435 3 6 3H18C18.7956 3 19.5587 3.31607 20.1213 3.87868C20.6839 4.44129 21 5.20435 21 6V18C21 18.7956 20.6839 19.5587 20.1213 20.1213C19.5587 20.6839 18.7956 21 18 21H6C5.20435 21 4.44129 20.6839 3.87868 20.1213C3.31607 19.5587 3 18.7956 3 18V6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3 16L8 11C8.928 10.107 10.072 10.107 11 11L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M14 14L15 13C15.928 12.107 17.072 12.107 18 13L21 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <p className="text-gray-600">Upload an image</p>
+        </div>
+      )}
+    </form>
+  );
+}

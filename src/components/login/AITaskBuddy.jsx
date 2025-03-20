@@ -1,30 +1,66 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import LoginForm from "./LoginForm";
 import FeatureSection from "./FeatureSection";
 import Footer from "./Footer";
-import ModeSelector from "./ModeSelector";
+import EmployeeLoginForm from "./EmployeeLoginForm";
 
-function AITaskBuddy({ onNavigate, onLogin }) {
+function AITaskBuddy({ onEmailLogin, onGoogleLogin, onNavigate }) {
+  const [loginMode, setLoginMode] = useState("manager"); // "manager" or "employee"
+  
   return (
     <div className="flex flex-col bg-[linear-gradient(90deg,#EEF2FF_0%,#FFF_100%)] min-h-screen">
-      <Header onNavigate={onNavigate} />
-      <main className="flex flex-col gap-24 items-center px-8 py-12 max-md:px-6 max-sm:px-4">
-        <section className="flex gap-12 justify-between items-center w-full max-w-[1216px] max-md:flex-col">
-          <div className="flex flex-col gap-6 w-full max-w-[584px]">
-            <h1 className="text-5xl font-bold leading-10 text-indigo-900 max-md:text-4xl max-md:leading-10 max-sm:text-3xl max-sm:leading-9">
-              Your Friendly AI Assistant for Job Success
-            </h1>
-            <p className="text-xl leading-5 text-gray-700 max-md:text-lg max-sm:text-base">
-              Breaking down work tasks into simple, manageable steps with
-              personalized support for every ability.
-            </p>
-            <ModeSelector />
+      <Header />
+      <main className="flex flex-1 justify-center items-center p-8 md:p-12">
+        <div className="flex flex-col md:flex-row gap-12 w-full max-w-7xl">
+          <div className="flex-1 max-w-xl">
+            <div className="mb-8">
+              <h2 className="text-4xl font-bold text-gray-900 mb-3">
+                {loginMode === "manager" ? "Manager Login" : "Employee Login"}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {loginMode === "manager" 
+                  ? "Sign in to manage your team and track progress" 
+                  : "Sign in to view and complete your assigned tasks"}
+              </p>
+            </div>
+            
+            <div className="mb-8">
+              <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+                <button 
+                  className={`flex-1 py-4 text-lg font-medium ${loginMode === "manager" ? "bg-indigo-600 text-white" : "bg-white text-gray-700"}`}
+                  onClick={() => setLoginMode("manager")}
+                >
+                  Manager
+                </button>
+                <button 
+                  className={`flex-1 py-4 text-lg font-medium ${loginMode === "employee" ? "bg-indigo-600 text-white" : "bg-white text-gray-700"}`}
+                  onClick={() => setLoginMode("employee")}
+                >
+                  Employee
+                </button>
+              </div>
+            </div>
+            
+            {loginMode === "manager" ? (
+              <LoginForm 
+                onEmailLogin={(email, password) => onEmailLogin(email, password, "manager")} 
+                onGoogleLogin={() => onGoogleLogin("manager")} 
+                onNavigateToSignup={() => onNavigate('signup')}
+              />
+            ) : (
+              <EmployeeLoginForm 
+                onEmailLogin={(email, password) => onEmailLogin(email, password, "employee")} 
+                onGoogleLogin={() => onGoogleLogin("employee")} 
+              />
+            )}
           </div>
-          <LoginForm onLogin={onLogin} onNavigateToSignup={() => onNavigate('signup')} />
-        </section>
-        <FeatureSection />
+          
+          <div className="flex-1">
+            <FeatureSection />
+          </div>
+        </div>
       </main>
       <Footer />
     </div>
