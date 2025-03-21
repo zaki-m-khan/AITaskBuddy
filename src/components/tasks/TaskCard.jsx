@@ -1,14 +1,52 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
-const TaskCard = ({ status, timeAgo, title, description, duration }) => {
+const TaskCard = ({ status, timeAgo, title, description, duration, onBreakdownTask }) => {
+  const [isBreakingDown, setIsBreakingDown] = useState(false);
+
+  const handleBreakdownClick = () => {
+    setIsBreakingDown(true);
+    onBreakdownTask(title, description)
+      .finally(() => setIsBreakingDown(false));
+  };
+
   return (
     <article className="p-6 bg-white rounded-xl border border-gray-100 border-solid shadow-[0_1px_2px_rgba(0,0,0,0.05)] w-[596px] max-md:w-full">
       <div className="flex justify-between items-center mb-4">
         <div className="px-3 py-1.5 text-sm text-emerald-600 bg-emerald-100 rounded-full">
           {status}
         </div>
-        <div className="text-sm text-gray-500">{timeAgo}</div>
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-gray-500">{timeAgo}</div>
+          <button 
+            onClick={handleBreakdownClick}
+            className="text-indigo-600 hover:text-indigo-800 transition-colors"
+            title="Break down task into steps"
+            disabled={isBreakingDown}
+          >
+            {isBreakingDown ? (
+              <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M18 8c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4zM6 15c0-2.2 1.8-4 4-4M13 19c0-2.2 1.8-4 4-4"></path>
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       <h3 className="mb-2 text-lg text-gray-800">{title}</h3>
       <p className="mb-4 text-base text-gray-600">{description}</p>

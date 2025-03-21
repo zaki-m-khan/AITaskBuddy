@@ -10,10 +10,12 @@ import GrowthGarden from "./GrowthGarden";
 import HelpFooter from "./HelpFooter";
 
 function AITaskBuddy({ onNavigate, onLogout, userInfo }) {
+  console.log("Rendering AITaskBuddy component");
+  
   return (
     <div className="flex flex-col bg-[linear-gradient(90deg,#EEF2FF_0%,#FFF_100%)] min-h-screen">
       <Header onNavigate={onNavigate} onLogout={onLogout} userInfo={userInfo} />
-      <main className="flex flex-col gap-8 px-20 py-8 max-md:px-10 max-sm:px-5">
+      <main className="flex flex-col gap-8 px-20 py-8 max-md:px-10 max-sm:px-5 flex-grow">
         <div className="flex flex-col gap-6">
           <WelcomeSection userInfo={userInfo} />
           <InputOptions />

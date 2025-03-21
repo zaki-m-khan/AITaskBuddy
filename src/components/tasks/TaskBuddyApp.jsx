@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { TaskForm } from "./TaskForm";
 import { TaskList } from "./TaskList";
 import { Layout } from "../shared/Layout";
+import TaskBreakdown from "./TaskBreakdown";
+import { mockBreakdownTask } from "../../services/aiService";
 
 const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
   const [quickTasks, setQuickTasks] = useState([
@@ -48,6 +50,10 @@ const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
   ]);
 
   const [inputMethod, setInputMethod] = useState("text");
+  const [taskToBreakdown, setTaskToBreakdown] = useState(null);
+  const [breakdownSteps, setBreakdownSteps] = useState([]);
+  const [isBreakingDown, setIsBreakingDown] = useState(false);
+  const [breakdownError, setBreakdownError] = useState(null);
 
   const handleAddTask = (task) => {
     const newTask = {
@@ -75,6 +81,23 @@ const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
 
   const handleQuickTask = (taskTitle) => {
     handleAddTask(taskTitle);
+  };
+
+  const handleBreakdownTask = async (title, description) => {
+    setIsBreakingDown(true);
+    setTaskToBreakdown({ title, description });
+    setBreakdownError(null);
+    
+    try {
+      // Use the real service in production
+      const steps = await mockBreakdownTask(title, description);
+      setBreakdownSteps(steps);
+    } catch (error) {
+      console.error("Error breaking down task:", error);
+      setBreakdownError(error);
+    } finally {
+      setIsBreakingDown(false);
+    }
   };
 
   return (
@@ -215,6 +238,14 @@ const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
             </button>
           </div>
         </div>
+
+        {taskToBreakdown && (
+          <TaskBreakdown 
+            steps={breakdownSteps} 
+            isLoading={isBreakingDown} 
+            error={breakdownError} 
+          />
+        )}
       </main>
     </Layout>
   );

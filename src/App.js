@@ -15,6 +15,7 @@ import {
   GoogleAuthProvider,
   signOut
 } from "firebase/auth";
+import { ChatTest } from "./components/chat/ChatTest";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -184,6 +185,9 @@ function App() {
           userInfo={userInfo}
           onProfileComplete={handleProfileComplete}
         />
+      )}
+      {currentView === 'chat' && (
+        <ChatTest />
       )}
     </div>
   );
