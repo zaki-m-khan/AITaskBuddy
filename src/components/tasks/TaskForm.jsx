@@ -1,16 +1,71 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputOption from "./InputOption";
 import QuickTemplateButton from "./QuickTemplateButton";
+import { AudioButton } from "./AudioButton";
+import { DocumentUploadButton } from "./DocumentUploadButton";
+import { documentToTaskBreakdown } from "../../services/documentService";
 
-export function TaskForm({ onAddTask, inputMethod }) {
+export function TaskForm({ onAddTask, inputMethod, onTaskBreakdown }) {
   const [taskText, setTaskText] = useState("");
+  const [isLiveTranscribing, setIsLiveTranscribing] = useState(false);
+  const [documentContent, setDocumentContent] = useState("");
+  const [documentTitle, setDocumentTitle] = useState("");
+  const [documentSteps, setDocumentSteps] = useState([]);
+  const [isProcessingDocument, setIsProcessingDocument] = useState(false);
+  const [documentError, setDocumentError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (taskText.trim()) {
       onAddTask(taskText);
       setTaskText("");
+    }
+  };
+
+  const handleTranscriptReady = (text) => {
+    console.log("Transcript received:", text);
+    setTaskText(text);
+    setIsLiveTranscribing(true);
+    
+    // Optionally automatically request a task breakdown when speech is transcribed
+    if (text.trim() && onTaskBreakdown && !isLiveTranscribing) {
+      onTaskBreakdown("Voice Task", text);
+    }
+  };
+
+  const handleDocumentProcessed = async (file) => {
+    setIsProcessingDocument(true);
+    setDocumentError(null);
+    
+    try {
+      // Call the service to process the document
+      const result = await documentToTaskBreakdown(file, file.name);
+      console.log("Document processed:", result);
+      
+      // Set the document content, title and steps
+      setDocumentContent(result.content || "");
+      setDocumentTitle(result.title || file.name);
+      
+      // Make sure steps is always an array, even if empty
+      const steps = Array.isArray(result.steps) ? result.steps : [];
+      setDocumentSteps(steps);
+      
+      // Trigger the task breakdown with the document content if provided
+      if (onTaskBreakdown && result.steps && result.steps.length > 0) {
+        onTaskBreakdown(result.title || file.name, result.content, result.steps);
+      } else if (documentContent && onTaskBreakdown) {
+        // If no steps were provided but we have content, trigger the breakdown
+        const processedSteps = await onTaskBreakdown(file.name, result.content);
+        if (processedSteps) {
+          setDocumentSteps(processedSteps);
+        }
+      }
+    } catch (error) {
+      console.error("Error processing document:", error);
+      setDocumentError("Failed to process document: " + (error.message || "Unknown error"));
+    } finally {
+      setIsProcessingDocument(false);
     }
   };
 
@@ -105,36 +160,95 @@ export function TaskForm({ onAddTask, inputMethod }) {
 
       {inputMethod === 'audio' && (
         <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center">
-          <button
-            type="button"
-            className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4"
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C11.0111 2 10.0444 2.39933 9.31864 3.10961C8.59289 3.81989 8.17713 4.75633 8.17713 5.73333V11.6C8.17713 12.577 8.59289 13.5134 9.31864 14.2237C10.0444 14.934 11.0111 15.3333 12 15.3333C12.9889 15.3333 13.9556 14.934 14.6814 14.2237C15.4071 13.5134 15.8229 12.577 15.8229 11.6V5.73333C15.8229 4.75633 15.4071 3.81989 14.6814 3.10961C13.9556 2.39933 12.9889 2 12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M19 10.6667V11.6C19 13.7885 18.1045 15.8669 16.5104 17.4246C14.9163 18.9824 12.7893 19.8571 10.5714 19.8571" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 10.6667V11.6C5 13.7885 5.89543 15.8669 7.48959 17.4246C9.08374 18.9824 11.2107 19.8571 13.4286 19.8571" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 19.8571V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8.17713 22H15.8229" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <p className="text-gray-600">Tap to record</p>
+          <AudioButton onTranscriptReady={handleTranscriptReady} />
+          
+          <div className={`mt-4 w-full transition-opacity duration-300 ${taskText ? 'opacity-100' : 'opacity-0'}`}>
+            <p className="mb-2 font-medium text-gray-700">Transcription:</p>
+            <div className="p-3 bg-gray-50 rounded border border-gray-200 min-h-[100px] max-h-[200px] overflow-y-auto">
+              {taskText || 'Speak now...'}
+            </div>
+            {taskText && (
+              <button
+                type="button"
+                onClick={() => onTaskBreakdown && onTaskBreakdown("Voice Task", taskText)}
+                className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 w-full"
+              >
+                Break Down Task
+              </button>
+            )}
+          </div>
         </div>
       )}
 
       {inputMethod === 'visual' && (
-        <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center">
-          <button
-            type="button"
-            className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4"
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 8H15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M3 6C3 5.20435 3.31607 4.44129 3.87868 3.87868C4.44129 3.31607 5.20435 3 6 3H18C18.7956 3 19.5587 3.31607 20.1213 3.87868C20.6839 4.44129 21 5.20435 21 6V18C21 18.7956 20.6839 19.5587 20.1213 20.1213C19.5587 20.6839 18.7956 21 18 21H6C5.20435 21 4.44129 20.6839 3.87868 20.1213C3.31607 19.5587 3 18.7956 3 18V6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M3 16L8 11C8.928 10.107 10.072 10.107 11 11L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M14 14L15 13C15.928 12.107 17.072 12.107 18 13L21 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <p className="text-gray-600">Upload an image</p>
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <div className="flex flex-col items-center justify-center mb-4">
+            <DocumentUploadButton onDocumentProcessed={handleDocumentProcessed} />
+          </div>
+          
+          {documentContent ? (
+            <div className="mt-4">
+              <div className="mb-4">
+                <h3 className="text-md font-medium text-gray-700 mb-2">Document Content:</h3>
+                <div className="p-3 bg-gray-50 rounded border border-gray-200 max-h-[150px] overflow-y-auto">
+                  <h4 className="font-medium mb-1">{documentTitle}</h4>
+                  <p className="text-sm text-gray-600">
+                    {documentContent.length > 300 
+                      ? documentContent.substring(0, 300) + '...' 
+                      : documentContent}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <h3 className="text-md font-medium text-gray-700 mb-2">Task Breakdown:</h3>
+                {isProcessingDocument ? (
+                  <div className="flex justify-center items-center py-4">
+                    <svg className="animate-spin h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span className="ml-2 text-indigo-600">Breaking down task...</span>
+                  </div>
+                ) : documentError ? (
+                  <div className="p-3 bg-red-50 rounded border border-red-200 text-red-700">
+                    {documentError}
+                  </div>
+                ) : documentSteps && documentSteps.length > 0 ? (
+                  <div className="p-3 bg-indigo-50 rounded border border-indigo-200">
+                    <ol className="list-decimal pl-5 space-y-2">
+                      {documentSteps.map((step, index) => (
+                        <li key={index} className="text-gray-700">{step}</li>
+                      ))}
+                    </ol>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-yellow-50 rounded border border-yellow-200 text-yellow-700">
+                    No task breakdown available. Try processing the document again.
+                  </div>
+                )}
+              </div>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  if (documentContent && onTaskBreakdown) {
+                    setIsProcessingDocument(true);
+                    onTaskBreakdown(documentTitle || "Document Task", documentContent)
+                      .finally(() => setIsProcessingDocument(false));
+                  }
+                }}
+                disabled={isProcessingDocument || !documentContent}
+                className="mt-4 w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                {isProcessingDocument ? "Processing..." : "Break Down Task Again"}
+              </button>
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 mt-4">
+              Upload a document to see task breakdown
+            </p>
+          )}
         </div>
       )}
     </form>

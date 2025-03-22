@@ -83,15 +83,20 @@ const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
     handleAddTask(taskTitle);
   };
 
-  const handleBreakdownTask = async (title, description) => {
+  const handleBreakdownTask = async (title, description, steps = null) => {
     setIsBreakingDown(true);
     setTaskToBreakdown({ title, description });
     setBreakdownError(null);
     
     try {
-      // Use the real service in production
-      const steps = await mockBreakdownTask(title, description);
-      setBreakdownSteps(steps);
+      if (steps) {
+        // If steps are already provided (e.g., from document processing)
+        setBreakdownSteps(steps);
+      } else {
+        // Use the real service in production
+        const processedSteps = await mockBreakdownTask(title, description);
+        setBreakdownSteps(processedSteps);
+      }
     } catch (error) {
       console.error("Error breaking down task:", error);
       setBreakdownError(error);
@@ -162,7 +167,7 @@ const TaskBuddyApp = ({ onNavigate, onLogout, userInfo, userRole }) => {
 
         {/* Task Input */}
         <div className="mb-8">
-          <TaskForm onAddTask={handleAddTask} inputMethod={inputMethod} />
+          <TaskForm onAddTask={handleAddTask} inputMethod={inputMethod} onTaskBreakdown={handleBreakdownTask} />
         </div>
 
         {/* Quick Tasks */}
