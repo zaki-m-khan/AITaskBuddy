@@ -17,7 +17,7 @@ function AITaskBuddy({ onEmailLogin, onGoogleLogin, onNavigate }) {
           <div className="flex-1 max-w-xl">
             <div className="mb-8">
               <h2 className="text-4xl font-bold text-gray-900 mb-3">
-                {loginMode === "manager" ? "Manager Login" : "Employee Login"}
+                {loginMode === "manager" ? "Job Coach Login" : "Employee Login"}
               </h2>
               <p className="text-xl text-gray-600">
                 {loginMode === "manager" 
@@ -32,7 +32,7 @@ function AITaskBuddy({ onEmailLogin, onGoogleLogin, onNavigate }) {
                   className={`flex-1 py-4 text-lg font-medium ${loginMode === "manager" ? "bg-indigo-600 text-white" : "bg-white text-gray-700"}`}
                   onClick={() => setLoginMode("manager")}
                 >
-                  Manager
+                  Job Coach
                 </button>
                 <button 
                   className={`flex-1 py-4 text-lg font-medium ${loginMode === "employee" ? "bg-indigo-600 text-white" : "bg-white text-gray-700"}`}
