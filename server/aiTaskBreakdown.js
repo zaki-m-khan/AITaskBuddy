@@ -62,8 +62,8 @@ async function breakdownTask(title, description) {
     
     return steps;
   } catch (error) {
-    console.error("Error calling OpenAI API:", error.response?.data || error.message);
-    throw new Error("Failed to break down the task. Please try again later.");
+    console.error("Error breaking down task:", error);
+    throw new Error("Failed to break down task. Please try again.");
   }
 }
 
