@@ -4,6 +4,8 @@
 
 ## By Zaki Khan, Agness Lungu, Nchimunya Mwiinga
 
+## VISIT THE APP HERE: https://ai-task-buddy-bff8t6fny-zaki-khans-projects.vercel.app/
+
 ## About AITaskBuddy
 
 AITaskBuddy is an innovative application designed to empower job coaches who work with individuals with disabilities, special needs, or other barriers to employment. Developed for the Microsoft Innovative Challenge, this tool integrates cutting-edge AI technologies to streamline coaching workflows, enhance client support, and improve employment outcomes.
