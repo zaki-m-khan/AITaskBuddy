@@ -32,6 +32,14 @@ function Sidebar({ onNavigate }) {
               <span>Profile</span>
             </button>
           </li>
+          <li>
+            <button 
+              onClick={() => onNavigate('tribalKnowledge')}
+              className="flex items-center w-full p-2 text-gray-700 rounded hover:bg-indigo-50 hover:text-indigo-600"
+            >
+              <span>Tribal Knowledge</span>
+            </button>
+          </li>
         </ul>
       </nav>
     </aside>

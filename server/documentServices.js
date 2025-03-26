@@ -1,5 +1,4 @@
-const { DocumentAnalysisClient } = require("@azure/ai-form-recognizer");
-const { AzureKeyCredential } = require("@azure/core-auth");
+const { DocumentAnalysisClient, AzureKeyCredential } = require("@azure/ai-form-recognizer");
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const os = require('os');

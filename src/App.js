@@ -16,6 +16,7 @@ import {
   signOut
 } from "firebase/auth";
 import { ChatTest } from "./components/chat/ChatTest";
+import TribalKnowledgeDashboard from "./components/tribalKnowledgePage/JobCoachDashboard";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -188,6 +189,14 @@ function App() {
       )}
       {currentView === 'chat' && (
         <ChatTest />
+      )}
+      {currentView === 'tribalKnowledge' && (
+        <TribalKnowledgeDashboard 
+          onNavigate={handleNavigation} 
+          onLogout={handleLogout}
+          userInfo={userInfo}
+          userRole={userRole}
+        />
       )}
     </div>
   );

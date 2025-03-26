@@ -13,7 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@azure/ai-form-recognizer": "^5.1.0",
+    "@azure/ai-form-recognizer": "^4.0.0",
     "@azure/core-auth": "^1.7.0",
     "axios": "^1.8.4",
     "cors": "^2.8.5",

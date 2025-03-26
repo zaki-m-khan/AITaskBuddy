@@ -9,6 +9,7 @@ const Sidebar = ({ onNavigate }) => {
         <SidebarItem label="Calendar" active={false} onClick={() => onNavigate('calendar')} />
         <SidebarItem label="Reports" active={false} onClick={() => onNavigate('reports')} />
         <SidebarItem label="Settings" active={false} onClick={() => onNavigate('settings')} />
+        <SidebarItem label="Tribal Knowledge" active={false} onClick={() => onNavigate('tribalKnowledge')} />
       </nav>
     </aside>
   );
